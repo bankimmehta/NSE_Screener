@@ -161,6 +161,9 @@ def build_features(prices: dict, fundamentals: dict) -> pd.DataFrame:
             "ev_ebitda": f.get("enterpriseToEbitda"),
             # quality
             "rev_growth": f.get("revenueGrowth"),
+            "rev_growth_raw": f.get("revenueGrowth_raw"),
+            "rev_growth_source": f.get("revenueGrowth_source"),
+            "is_financial": bool(f.get("is_financial", False)),
             "earn_growth": f.get("earningsGrowth") if pd.notna(f.get("earningsGrowth"))
                            else f.get("earningsQuarterlyGrowth"),
             "margin": f.get("profitMargins"),

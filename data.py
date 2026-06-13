@@ -16,6 +16,7 @@ import pandas as pd
 import yfinance as yf
 
 import config
+import clean
 
 warnings.simplefilter("ignore", category=FutureWarning)
 config.CACHE_DIR.mkdir(exist_ok=True)
@@ -169,6 +170,14 @@ def _fetch_one(ticker: str, with_news: bool) -> tuple[str, dict]:
                 })
         except Exception:  # noqa: BLE001
             pass
+
+    # --- sanitize: recompute growth from annual statements, flag financials,
+    #     drop artifacts (e.g. INDUSINDBK's 272% snapshot revenueGrowth) ---
+    try:
+        inc = tk.income_stmt
+    except Exception:  # noqa: BLE001
+        inc = None
+    rec = clean.sanitize_fundamentals(rec, inc)
 
     return ticker, rec
 
